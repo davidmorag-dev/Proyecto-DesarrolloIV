@@ -28,7 +28,7 @@ En una sesión administrativa de MySQL, crea la base y una cuenta exclusiva del 
 ```sql
 CREATE DATABASE control_inventarios_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'control_inventarios_user'@'127.0.0.1' IDENTIFIED BY 'CAMBIAR_ESTA_CLAVE';
-GRANT ALL PRIVILEGES ON control_inventarios_db.* TO 'control_inventarios_user'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON `control\_inventarios\_db`.* TO 'control_inventarios_user'@'127.0.0.1';
 ```
 
 Si la base y el usuario ya existen, utiliza los existentes: no vuelvas a crearlos. Copia `.env.example` a `.env` en la raíz y configura `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST` y `DB_PORT` con los valores de tu instancia. `.env` está ignorado por Git. Si `DB_NAME` está vacío, `backend/settings.py` selecciona SQLite para desarrollo; **no** cambia automáticamente a SQLite cuando falla MySQL.
@@ -67,7 +67,15 @@ Rutas principales: `/api/categorias/`, `/api/proveedores/`, `/api/ubicaciones/`,
 py manage.py test
 ```
 
-Django crea y elimina una base de pruebas independiente. Con MySQL, la cuenta utilizada para ejecutar la suite necesita permiso para crear y eliminar esa base temporal. Si el usuario del proyecto solo tiene permisos sobre `control_inventarios_db`, ejecuta las pruebas con una cuenta administrativa local mediante variables `DB_USER` y `DB_PASSWORD` del proceso; no agregues esas credenciales al repositorio. La suite no modifica los datos de demostración de la base principal.
+Django crea y elimina la base temporal `test_control_inventarios_db`; la suite no modifica `control_inventarios_db`. Para que el usuario configurado normalmente en `.env` pueda ejecutar las pruebas, un administrador de MySQL debe concederle **una sola vez** estos permisos sobre la base temporal, sin crearla manualmente:
+
+```sql
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, INDEX, REFERENCES
+ON `test\_control\_inventarios\_db`.*
+TO 'control_inventarios_user'@'127.0.0.1';
+```
+
+Los guiones bajos se escapan con `\` para que MySQL trate ambos nombres de base como literales. El permiso de pruebas no concede acceso a otras bases. Después de aplicarlo, `py manage.py test` ejecuta las 17 pruebas con la configuración habitual de `.env`.
 
 ## Limitaciones conocidas
 
