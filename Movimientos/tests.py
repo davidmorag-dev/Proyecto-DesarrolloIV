@@ -84,3 +84,29 @@ class MovimientosApiTest(APITestCase):
 
         self.assertEqual(respuesta.status_code, status.HTTP_200_OK)
         self.assertEqual(respuesta.data['total_registros'], 1)
+
+    def test_consulta_no_puede_registrar_movimientos(self):
+        consulta = User.objects.create(username='auditoria_consulta')
+        consulta.groups.add(Group.objects.get_or_create(name='Consulta')[0])
+        self.client.force_authenticate(user=consulta)
+
+        listado = self.client.get('/api/movimientos/')
+        entrada = self.entrada()
+
+        self.assertEqual(listado.status_code, status.HTTP_200_OK)
+        self.assertEqual(entrada.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(MovimientoInventario.objects.count(), 0)
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.stock_actual, 0)
+
+    def test_administrador_puede_registrar_movimiento(self):
+        administrador = User.objects.create(username='auditoria_administrador')
+        administrador.groups.add(Group.objects.get_or_create(name='Administrador')[0])
+        self.client.force_authenticate(user=administrador)
+
+        respuesta = self.entrada(4)
+
+        self.assertEqual(respuesta.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(respuesta.data['usuario'], administrador.id)
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.stock_actual, 4)
