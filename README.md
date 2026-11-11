@@ -43,13 +43,21 @@ py manage.py migrate
 
 ## Usuarios y permisos
 
-Crea un superusuario local para entrar en `/admin/`:
+Crea primero un superusuario local para entrar en `/admin/`:
 
 ```powershell
 py manage.py createsuperuser
 ```
 
-La API reconoce tres grupos de Django: `Administrador` (CRUD de catálogos/productos y registro de movimientos), `Operador` (lectura, creación y edición sin borrado) y `Consulta` (solo lectura). Los movimientos no admiten edición ni borrado. Crea o asigna estos grupos y usuarios desde Django Admin; los nombres del grupo determinan los permisos de la API. La matriz completa está en `Documento_Tecnico_Final_Control_Inventarios.docx`.
+Para cargar el inventario de demostración en la base configurada, ejecuta:
+
+```powershell
+py manage.py seed_demo
+```
+
+El comando crea categorías, ubicaciones, proveedores ficticios, productos de redes y cómputo, y movimientos que actualizan el stock. Se puede ejecutar de nuevo sin duplicar los movimientos. Usa a `Davox` como responsable de los movimientos de muestra, así que el superusuario debe tener ese nombre. No crea ni modifica otros usuarios. Los movimientos siguen siendo de solo lectura en el admin; se registran desde la API.
+
+La API reconoce `Administrador` (CRUD de catálogos/productos y registro de movimientos), `Operador` (lectura, creación y edición sin borrado), `Proveedor` (creación y edición de proveedores) y `Consulta` (solo lectura). Los movimientos no admiten edición ni borrado. Los nombres del grupo determinan los permisos de la API.
 
 ## Iniciar el servidor y probar la API
 

@@ -13,7 +13,7 @@ def tiene_permiso(request, accion):
     grupos = set(request.user.groups.values_list('name', flat=True))
     if request.user.is_superuser or 'Administrador' in grupos:
         return True
-    return accion != 'eliminar' and 'Operador' in grupos
+    return accion != 'eliminar' and bool({'Operador', 'Proveedor'} & grupos)
 
 
 @api_view(['GET', 'POST'])

@@ -5,6 +5,6 @@ from .models import Proveedor
 
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'identificacion', 'correo', 'activo')
+    list_display = ('nombre', 'identificacion', 'telefono', 'correo', 'activo')
     search_fields = ('nombre', 'identificacion')
     list_filter = ('activo',)

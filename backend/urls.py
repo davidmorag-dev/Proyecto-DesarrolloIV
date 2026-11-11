@@ -18,6 +18,10 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework.authtoken.views import obtain_auth_token
 
+admin.site.site_header = 'Control de Inventarios'
+admin.site.site_title = 'Inventario | Administración'
+admin.site.index_title = 'Panel de inventario'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', obtain_auth_token, name='api_token'),
