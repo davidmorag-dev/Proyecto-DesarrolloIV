@@ -2,8 +2,6 @@
 
 SPA de React, Vite, JavaScript, React Router y Bootstrap 5 para la API Django REST Framework del Proyecto I. Conserva los módulos de categorías, proveedores, ubicaciones, productos y movimientos. No usa datos simulados.
 
-**Estado de esta rama:** la integración por módulos está en curso. El dashboard y la navegación ya están incorporados, pero faltan archivos de autenticación y pantallas de las ramas de otros integrantes para que `npm run build` termine correctamente.
-
 La interfaz toma la estructura del ejercicio GameArena de clase, pero utiliza una paleta verde, crema y terracota y dos ilustraciones originales de inventarios en `public/images/`. Las imágenes se generaron con la herramienta integrada imagegen: una bodega con tableta para el login y estanterías de inventario para el dashboard. No representan datos del sistema.
 
 ## Requisitos y ejecución
