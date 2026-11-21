@@ -46,19 +46,177 @@ export default function ProductoForm({ product, categories, locations, suppliers
   const categoryOptions = categories.filter((item) => item.activo || item.id === Number(form.categoria));
   const locationOptions = locations.filter((item) => item.activo || item.id === Number(form.ubicacion));
 
-  return <section className="card border-0 shadow-sm mb-4"><div className="card-body p-4">
-    <h2 className="h5 fw-bold mb-3">{product ? `Editar producto #${product.id}` : 'Registrar producto'}</h2>
-    {validation && <div className="alert alert-warning" role="alert">{validation}</div>}
-    <form onSubmit={submit}><div className="row g-3">
-      <div className="col-md-4"><label className="form-label" htmlFor="codigo">Código *</label><input id="codigo" name="codigo" className="form-control" maxLength="30" value={form.codigo} onChange={change} required /></div>
-      <div className="col-md-8"><label className="form-label" htmlFor="nombre">Nombre *</label><input id="nombre" name="nombre" className="form-control" maxLength="150" value={form.nombre} onChange={change} required /></div>
-      <div className="col-12"><label className="form-label" htmlFor="descripcion">Descripción</label><textarea id="descripcion" name="descripcion" className="form-control" rows="2" value={form.descripcion} onChange={change} /></div>
-      <div className="col-md-6"><label className="form-label" htmlFor="categoria">Categoría *</label><select id="categoria" name="categoria" className="form-select" value={form.categoria} onChange={change} required><option value="">Seleccione</option>{categoryOptions.map((item) => <option key={item.id} value={item.id}>{item.nombre}{item.activo ? '' : ' (inactiva)'}</option>)}</select></div>
-      <div className="col-md-6"><label className="form-label" htmlFor="ubicacion">Ubicación *</label><select id="ubicacion" name="ubicacion" className="form-select" value={form.ubicacion} onChange={change} required><option value="">Seleccione</option>{locationOptions.map((item) => <option key={item.id} value={item.id}>{item.nombre}{item.activo ? '' : ' (inactiva)'}</option>)}</select></div>
-      <div className="col-md-6"><label className="form-label" htmlFor="proveedores">Proveedores asociados</label><select id="proveedores" className="form-select" multiple size="4" value={form.proveedores.map(String)} onChange={changeSuppliers}>{suppliers.map((item) => <option key={item.id} value={item.id}>{item.nombre}{item.activo ? '' : ' (inactivo)'}</option>)}</select><div className="form-text">Use Ctrl para seleccionar varios proveedores.</div></div>
-      <div className="col-md-3"><label className="form-label" htmlFor="precio">Precio *</label><input id="precio" name="precio" type="number" min="0.01" step="0.01" className="form-control" value={form.precio} onChange={change} required /></div>
-      <div className="col-md-3"><label className="form-label" htmlFor="stock_minimo">Stock mínimo *</label><input id="stock_minimo" name="stock_minimo" type="number" min="0" step="1" className="form-control" value={form.stock_minimo} onChange={change} required /><div className="form-text">El stock actual se modifica con movimientos.</div></div>
-      <div className="col-12"><div className="form-check"><input id="activo" name="activo" type="checkbox" className="form-check-input" checked={form.activo} onChange={change} /><label htmlFor="activo" className="form-check-label">Activo</label></div></div>
-    </div><div className="d-flex gap-2 mt-3"><button className="btn btn-primary" disabled={saving}>{saving ? 'Guardando...' : product ? 'Guardar cambios' : 'Registrar'}</button>{product && <button className="btn btn-outline-secondary" type="button" onClick={onCancel} disabled={saving}>Cancelar</button>}</div></form>
-  </div></section>;
+  return (
+    <section className="card border-0 shadow-sm mb-4">
+      <div className="card-body p-4">
+        <h2 className="h5 fw-bold mb-3">
+          {product ? `Editar producto #${product.id}` : 'Registrar producto'}
+        </h2>
+
+        {validation && (
+          <div className="alert alert-warning" role="alert">{validation}</div>
+        )}
+
+        <form onSubmit={submit}>
+          <div className="row g-3">
+            <div className="col-md-4">
+              <label className="form-label" htmlFor="codigo">Código *</label>
+              <input
+                id="codigo"
+                name="codigo"
+                className="form-control"
+                maxLength="30"
+                value={form.codigo}
+                onChange={change}
+                required
+              />
+            </div>
+
+            <div className="col-md-8">
+              <label className="form-label" htmlFor="nombre">Nombre *</label>
+              <input
+                id="nombre"
+                name="nombre"
+                className="form-control"
+                maxLength="150"
+                value={form.nombre}
+                onChange={change}
+                required
+              />
+            </div>
+
+            <div className="col-12">
+              <label className="form-label" htmlFor="descripcion">Descripción</label>
+              <textarea
+                id="descripcion"
+                name="descripcion"
+                className="form-control"
+                rows="2"
+                value={form.descripcion}
+                onChange={change}
+              />
+            </div>
+
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="categoria">Categoría *</label>
+              <select
+                id="categoria"
+                name="categoria"
+                className="form-select"
+                value={form.categoria}
+                onChange={change}
+                required
+              >
+                <option value="">Seleccione</option>
+                {categoryOptions.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.nombre}{item.activo ? '' : ' (inactiva)'}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="ubicacion">Ubicación *</label>
+              <select
+                id="ubicacion"
+                name="ubicacion"
+                className="form-select"
+                value={form.ubicacion}
+                onChange={change}
+                required
+              >
+                <option value="">Seleccione</option>
+                {locationOptions.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.nombre}{item.activo ? '' : ' (inactiva)'}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="col-md-6">
+              <label className="form-label" htmlFor="proveedores">Proveedores asociados</label>
+              <select
+                id="proveedores"
+                className="form-select"
+                multiple
+                size="4"
+                value={form.proveedores.map(String)}
+                onChange={changeSuppliers}
+              >
+                {suppliers.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.nombre}{item.activo ? '' : ' (inactivo)'}
+                  </option>
+                ))}
+              </select>
+              <div className="form-text">Use Ctrl para seleccionar varios proveedores.</div>
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="precio">Precio *</label>
+              <input
+                id="precio"
+                name="precio"
+                type="number"
+                min="0.01"
+                step="0.01"
+                className="form-control"
+                value={form.precio}
+                onChange={change}
+                required
+              />
+            </div>
+
+            <div className="col-md-3">
+              <label className="form-label" htmlFor="stock_minimo">Stock mínimo *</label>
+              <input
+                id="stock_minimo"
+                name="stock_minimo"
+                type="number"
+                min="0"
+                step="1"
+                className="form-control"
+                value={form.stock_minimo}
+                onChange={change}
+                required
+              />
+              <div className="form-text">El stock actual se modifica con movimientos.</div>
+            </div>
+
+            <div className="col-12">
+              <div className="form-check">
+                <input
+                  id="activo"
+                  name="activo"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={form.activo}
+                  onChange={change}
+                />
+                <label htmlFor="activo" className="form-check-label">Activo</label>
+              </div>
+            </div>
+          </div>
+
+          <div className="d-flex gap-2 mt-3">
+            <button className="btn btn-primary" disabled={saving}>
+              {saving ? 'Guardando...' : product ? 'Guardar cambios' : 'Registrar'}
+            </button>
+            {product && (
+              <button
+                className="btn btn-outline-secondary"
+                type="button"
+                onClick={onCancel}
+                disabled={saving}
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+    </section>
+  );
 }
